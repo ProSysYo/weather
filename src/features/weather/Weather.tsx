@@ -1,20 +1,35 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { weatherActions } from "./weatherSlice";
+import { getWetherByCityName, weatherActions } from "./weatherSlice";
 import { MySelect } from "../../components/Select";
+import { useEffect, useState } from "react";
+import { WeatherBoard } from "./WeatherBoard";
+
 import "./Weather.scss";
 
 export const Weather = () => {
     const weather = useAppSelector((state) => state.weather);
     const dispatch = useAppDispatch();
+    const [show, setShow] = useState(false);
+
+    useEffect(() => {
+        if (weather.status === "idle" && weather.weather) {
+            setShow(true)
+        } else {
+            setShow(false)
+        }
+    }, [weather.weather, weather.status])
 
     const onChange = (value: any) => {
-        dispatch(weatherActions.setCity(value));
+        if (value) {
+            dispatch(weatherActions.setCity(value));
+            dispatch(getWetherByCityName(value.value));
+        } else {
+            dispatch(weatherActions.abortData())            
+        }
     };
 
     const onInputChange = (value: any) => {
-        console.log(value);
-        
-        dispatch(weatherActions.filterCities(value));
+        if (value) dispatch(weatherActions.filterCities(value));
     };
 
     return (
@@ -22,21 +37,19 @@ export const Weather = () => {
             <div className="search">
                 <MySelect
                     value={weather.city}
-                    placeholder="Выберите город"
-                    options={weather.filteredCities}                    
+                    placeholder="Введите название города"
+                    options={weather.filteredCities}
                     onChange={onChange}
                     onInputChange={onInputChange}
+                    isClearable
                 />
             </div>
+            {weather.status === "loading" && <p className="loader">Loading...</p>}
 
-            <div className="board">
-                <div className="left-board">
-                    <h1>17°</h1>
-                    <p>17:31:12</p>
-                    <h3>Moskow, RU</h3>
-                </div>
-                <div className="right-board">fff</div>
-            </div>
+            <WeatherBoard
+                show={show}
+                weather={weather.weather}
+            />
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import  './App.scss';
 import { Weather } from './features/weather/Weather';
 
-function App() {
+function App() { 
   return (
     <div className="app">
       <Weather/>
