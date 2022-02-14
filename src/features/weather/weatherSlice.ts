@@ -25,7 +25,7 @@ interface weatherState {
 }
 
 const initialState: weatherState = {
-    status: "idle",
+    status: "loading",
     city: null,
     cities: json.map((city) => ({
         label: city.city,
