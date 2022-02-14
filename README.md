@@ -8,7 +8,7 @@ npm install
 
 **Создайте .env файл в директории проекта**
 
-**Добавьте в .env файл переменную **
+**Добавьте в .env файл переменную**
 
 ```bash
 REACT_APP_WEATHER_KEY = "API ключ от openweathermap"
